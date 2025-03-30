@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 
 const appInstances = [];
 const portConfigs = [...Array(25)].map((_, i) => 3000 + i); // Default to 25 ports starting from 3000
@@ -35,8 +36,12 @@ portConfigs.forEach((port, index) => {
   const app = express();
 
   app.get("/", (req, res) => {
+    const envData = process.env.MY_ENV_VAR || "Default ENV Value";
     const response = responses[index] || `Service running on port ${port}`;
-    res.json(typeof response === "object" ? response : { message: response });
+    res.json({
+      message: typeof response === "object" ? response : { message: response },
+      envData,
+    });
   });
 
   app.listen(port, () => {
